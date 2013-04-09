@@ -31,7 +31,7 @@ class Rewrites implements JudgePlugin
         exec(sprintf('find "%s" -name config.xml', $extensionPath), $configFiles);
 
         $rewriteCount = 0;
-        $types = array('blocks', 'models');
+        $types = array('blocks', 'models', 'helpers');
         foreach ($configFiles as $configFile) {
             foreach ($types as $type) {
                 $this->findRewrites($configFile, $type);
@@ -86,7 +86,7 @@ class Rewrites implements JudgePlugin
     {
         $critical = $this->config->plugins->{$this->name}->critical->toArray();
         list($type, $code) = explode(':', $rewrite);
-        if (false == is_array($critical[$type])) {
+        if (!isset($critical[$type]) || false == is_array($critical[$type])) {
             return false;
         }
         return in_array($code, $critical[$type]);
